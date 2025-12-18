@@ -1,98 +1,344 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Wallet Service - NestJS + MongoDB
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A simple, production-ready wallet service built with NestJS and MongoDB.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+✅ **Core Functionality**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Create wallets with unique IDs
+- Fund wallets with validation
+- Transfer funds between wallets
+- Fetch wallet details with transaction history
 
-## Project setup
+✅ **Best Practices**
 
-```bash
-$ npm install
+- Request validation using class-validator
+- Comprehensive error handling
+- Idempotency support for fund/transfer operations
+- Transaction audit trail
+- Balance integrity checks
+
+✅ **Bonus Features**
+
+- Idempotent operations (prevents duplicate transactions)
+- Unit tests included
+- Production scaling notes
+
+## Project Structure
+
+```
+src/
+├── wallets/
+│   ├── dto/
+│   │   └── wallet.dto.ts          # Request DTOs with validation
+│   ├── schemas/
+│   │   ├── wallet.schema.ts       # Wallet MongoDB schema
+│   │   └── transaction.schema.ts  # Transaction MongoDB schema
+│   ├── wallets.controller.ts      # API endpoints
+│   ├── wallets.service.ts         # Business logic
+│   ├── wallets.service.spec.ts    # Unit tests
+│   └── wallets.module.ts          # Module configuration
+├── app.module.ts                   # Root module
+└── main.ts                         # Application entry point
 ```
 
-## Compile and run the project
+## Prerequisites
+
+- Node.js (v16+)
+- MongoDB (v4.4+)
+- npm or yarn
+
+## Installation
 
 ```bash
-# development
-$ npm run start
+# Clone and setup
+npm install
 
-# watch mode
-$ npm run start:dev
+# Install NestJS CLI globally (if not already installed)
+npm i -g @nestjs/cli
 
-# production mode
-$ npm run start:prod
+# Install dependencies
+npm install @nestjs/mongoose mongoose
+npm install class-validator class-transformer
+npm install @nestjs/config
 ```
 
-## Run tests
+## Configuration
+
+Make sure MongoDB is running on `mongodb://localhost:27017/wallet-service`
+
+To change the connection string, edit `src/app.module.ts`:
+
+```typescript
+MongooseModule.forRoot('your-mongodb-connection-string');
+```
+
+## Running the Application
 
 ```bash
-# unit tests
-$ npm run test
+# Development mode with hot reload
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Production mode
+npm run build
+npm run start:prod
 ```
 
-## Deployment
+The API will be available at `http://localhost:3000`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Running Tests
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Unit tests
+npm run test
+
+# Test coverage
+npm run test:cov
+
+# E2E tests
+npm run test:e2e
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## API Documentation
 
-## Resources
+### 1. Create Wallet
 
-Check out a few resources that may come in handy when working with NestJS:
+**Endpoint:** `POST /wallets`
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+**Request Body:**
 
-## Support
+```json
+{
+  "id": "user-123",
+  "currency": "USD",
+  "balance": 0
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Success Response (201):**
 
-## Stay in touch
+```json
+{
+  "id": "user-123",
+  "currency": "USD",
+  "balance": 0,
+  "_id": "...",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Error Responses:**
+
+- `400` - Validation error
+- `409` - Wallet already exists
+
+---
+
+### 2. Fund Wallet
+
+**Endpoint:** `POST /wallets/:id/fund`
+
+**Request Body:**
+
+```json
+{
+  "amount": 1000,
+  "reference": "Initial deposit",
+  "idempotencyKey": "unique-key-123"
+}
+```
+
+**Success Response (200):**
+
+```json
+{
+  "id": "user-123",
+  "currency": "USD",
+  "balance": 1000,
+  ...
+}
+```
+
+**Error Responses:**
+
+- `400` - Invalid amount (must be positive)
+- `404` - Wallet not found
+
+---
+
+### 3. Transfer Between Wallets
+
+**Endpoint:** `POST /wallets/transfer`
+
+**Request Body:**
+
+```json
+{
+  "fromWalletId": "user-123",
+  "toWalletId": "user-456",
+  "amount": 250,
+  "reference": "Payment for services",
+  "idempotencyKey": "transfer-unique-123"
+}
+```
+
+**Success Response (200):**
+
+```json
+{
+  "sender": {
+    "id": "user-123",
+    "balance": 750,
+    ...
+  },
+  "receiver": {
+    "id": "user-456",
+    "balance": 250,
+    ...
+  }
+}
+```
+
+**Error Responses:**
+
+- `400` - Insufficient balance / Invalid request
+- `404` - Sender or receiver wallet not found
+
+---
+
+### 4. Get Wallet Details
+
+**Endpoint:** `GET /wallets/:id`
+
+**Success Response (200):**
+
+```json
+{
+  "wallet": {
+    "id": "user-123",
+    "currency": "USD",
+    "balance": 750,
+    ...
+  },
+  "transactions": [
+    {
+      "walletId": "user-123",
+      "type": "TRANSFER_OUT",
+      "amount": -250,
+      "toWalletId": "user-456",
+      "balanceAfter": 750,
+      "reference": "Payment",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "walletId": "user-123",
+      "type": "FUND",
+      "amount": 1000,
+      "balanceAfter": 1000,
+      "reference": "Initial deposit",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+**Error Responses:**
+
+- `404` - Wallet not found
+
+---
+
+## Validation Rules
+
+### Create Wallet
+
+- `id`: Required, must be a non-empty string
+- `currency`: Optional, defaults to "USD"
+- `balance`: Optional, must be >= 0, defaults to 0
+
+### Fund Wallet
+
+- `amount`: Required, must be a positive number
+- `reference`: Optional string
+- `idempotencyKey`: Optional string (recommended for production)
+
+### Transfer
+
+- `fromWalletId`: Required, non-empty string
+- `toWalletId`: Required, non-empty string
+- `amount`: Required, positive number
+- `reference`: Optional string
+- `idempotencyKey`: Optional string (recommended for production)
+
+## Idempotency
+
+The service supports idempotency for fund and transfer operations. Include an `idempotencyKey` in your request to ensure the same operation isn't processed twice:
+
+```json
+{
+  "amount": 100,
+  "idempotencyKey": "unique-operation-id-123"
+}
+```
+
+If you retry the same request with the same key, the operation will not be duplicated.
+
+## Testing with Postman
+
+See the included `Postman API Test Examples` artifact for detailed testing instructions and sample requests.
+
+Quick test sequence:
+
+1. Create two wallets
+2. Fund both wallets
+3. Transfer between wallets
+4. Check transaction history
+5. Test error cases (insufficient balance, invalid amounts, etc.)
+
+## Database Schema
+
+### Wallet Collection
+
+```typescript
+{
+  id: string (unique)
+  currency: string (default: 'USD')
+  balance: number (min: 0)
+  createdAt: Date
+  updatedAt: Date
+}
+```
+
+### Transaction Collection
+
+```typescript
+{
+  walletId: string
+  type: 'FUND' | 'TRANSFER_IN' | 'TRANSFER_OUT'
+  amount: number
+  fromWalletId?: string
+  toWalletId?: string
+  idempotencyKey?: string
+  balanceAfter: number
+  reference?: string
+  createdAt: Date
+  updatedAt: Date
+}
+```
+
+## Production Considerations
+
+See `Production Scaling Notes` artifact for comprehensive scaling strategy including:
+
+- Database transactions and race condition handling
+- Caching strategy with Redis
+- Horizontal scaling architecture
+- Monitoring and observability
+- Security enhancements
+- Disaster recovery
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
